@@ -18,3 +18,5 @@ Hook the saving to shutdown and to Firefox launch.
 
 ## Future Ideas
 - Save and restore entire workspaces manually with a launcher like rofi/wofi/fuzzel
+- Connect to the $NIRI_SOCKET directly
+- Implement Wayland xdg_session_management to Niri

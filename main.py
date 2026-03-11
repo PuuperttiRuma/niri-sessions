@@ -10,6 +10,13 @@ def get_json(target):
     return data
 
 
+def save(target):
+    local_folder = "/home/puupertti/.local/state/niri-sessions"
+    data = get_json(target)
+    with open(f"{local_folder}/{target}.state.json", "w") as f:
+        json.dump(data, f)
+
+
 def niri_action(action, *args):
     command = ["niri", "msg", "action", action]
     for arg in args:
@@ -30,9 +37,9 @@ def move_window(window_id, workspace_id):
 
 
 def main():
-    current_window = get_json("focused-window")
-    move_window("37", "3")
-    niri_action("focus-window", "--id", current_window["id"])
+    # move_window("37", "3")
+    save("workspaces")
+    save("windows")
 
 
 if __name__ == "__main__":

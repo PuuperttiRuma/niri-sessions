@@ -38,11 +38,11 @@ tells the actual ordering.
 ## Doing
 
 ## To Do (Phase backlog)
-- [ ] Save the windows.state.json and workspaces.state.json to .local/state
 - [ ] Create a CLI arg for save and restore
 - [ ] Create scripts for moving the window to the correct places
 
 ## Done
+- [x] Save the windows.state.json and workspaces.state.json to .local/state
 - [x] Change the window move to use --focus false and --id
 - [x] Learn how to parse JSON in Python
 - [x] Experiment with JSON

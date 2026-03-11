@@ -36,7 +36,6 @@ tells the actual ordering.
 - `move-window-to-workspace --window-id id --focus false <reference>`. Ok, it IS possible to move a window without focus! The reference is the idx or name of the workspace.
 
 ## Doing
-- [ ] Change the window move to use --focus false and --id
 
 ## To Do (Phase backlog)
 - [ ] Save the windows.state.json and workspaces.state.json to .local/state
@@ -44,6 +43,7 @@ tells the actual ordering.
 - [ ] Create scripts for moving the window to the correct places
 
 ## Done
+- [x] Change the window move to use --focus false and --id
 - [x] Learn how to parse JSON in Python
 - [x] Experiment with JSON
 - [x] Parse focus-window

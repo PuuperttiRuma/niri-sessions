@@ -19,13 +19,19 @@ def niri_action(action, *args):
 
 
 def move_window(window_id, workspace_id):
-    niri_action("focus-window", "--id", window_id)
-    niri_action("move-window-to-workspace", workspace_id)
+    niri_action(
+        "move-window-to-workspace",
+        "--window-id",
+        window_id,
+        "--focus",
+        "false",
+        workspace_id,
+    )
 
 
 def main():
     current_window = get_json("focused-window")
-    move_window("37", "2")
+    move_window("37", "3")
     niri_action("focus-window", "--id", current_window["id"])
 
 

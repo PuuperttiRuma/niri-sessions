@@ -1,18 +1,20 @@
 import subprocess
+import json
 
 
 def get_json(target):
     process = subprocess.run(
         ["niri", "msg", "--json", target], capture_output=True, text=True
     )
-    # TODO: Add JSON parsing so returns a proper JSON object
-    return process.stdout
+    data = json.loads(process.stdout)
+    return data
 
 
 def niri_action(action, *args):
     command = ["niri", "msg", "action", action]
     for arg in args:
-        command.append(arg)
+        command.append(str(arg))
+    print(command)
     return subprocess.run(command)
 
 
@@ -22,7 +24,9 @@ def move_window(window_id, workspace_id):
 
 
 def main():
+    current_window = get_json("focused-window")
     move_window("37", "2")
+    niri_action("focus-window", "--id", current_window["id"])
 
 
 if __name__ == "__main__":

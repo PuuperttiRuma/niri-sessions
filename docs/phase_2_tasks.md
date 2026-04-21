@@ -33,15 +33,36 @@ tells the actual ordering.
 - `focus-window-in-column --idx idx`
 - `move-window-to-monitor --id --output` Id of the window to move!
 - `set-window-width --id change` ja -height- 
-- `move-window-to-workspace --window-id id --focus false <reference>`. Ok, it IS possible to move a window without focus! The reference is the idx or name of the workspace.
+- `move-window-to-workspace --window-id id --focus false <reference>`. Ok, it IS
+possible to move a window without focus! The reference is the idx or name of the
+workspace.
+
+#### Figuring out the move part
+To restore a session, I first need a saved state (done) and I need the current 
+state. 
+
+Then, we go through the current state dictionary one by one, check if the
+thing is in its correct place. With workspaces, we recreate (at least now), with
+windows we move.
+
+First we need to fix the workspaces to their correct places.
+This pretty easy: Workspaces have ID, IDX, name and output(monitor), which will
+tell where they should be. Of these the **IDX** and **Name** are what will be
+saved (and active_window maybe?). 
+
+How do I know if the window is in correct place?
 
 ## Doing
 
 ## To Do (Phase backlog)
 - [ ] Create a CLI arg for save and restore
+- [ ] Create a class/API for Niri commands
+- [ ] Refactor the state manipulation logic to separate file
 - [ ] Create scripts for moving the window to the correct places
 
 ## Done
+- [x] Create a function to recreate Workspace State
+- [x] Load the JSON to a lib
 - [x] Save the windows.state.json and workspaces.state.json to .local/state
 - [x] Change the window move to use --focus false and --id
 - [x] Learn how to parse JSON in Python

@@ -50,39 +50,45 @@ def recreate_named_workspaces():
     saved_data = load("workspaces")
     current_data = get_json("workspaces")
 
-    for workspace in saved_data:
-        if workspace["name"] == "null":
+    for saved_workspace in saved_data:
+        idx = saved_workspace["idx"]
+        name = saved_workspace["name"]
+        output = saved_workspace["output"]
+
+        print(f"Workspace: {idx}, {name}")
+        if name is None:
+            print(f"Workspace idx {idx}, has no name, skip.")
             continue
 
-        # Check if there is already a workspace with that name
-        old_named_workspace_index = None
-        for existing_workspace in current_data:
-            if existing_workspace["name"] == workspace["idx"]:
-                old_named_workspace_index = current_data["idx"]
+        current_workspace_names = []
+        for current_workspace in current_data:
+            current_workspace_names.append(current_workspace["name"])
 
-        # if workspace with the same name exists, move it to the
-        # old index, otherwise
-        # TODO: Refactor: the execution flow is a bit weird
-        if old_named_workspace_index is None:
+        # Check if there is already a workspace with that name
+        # and if there is, move it to the correct index
+        var = current_workspace_names
+        print(type(var))
+        print(var)
+        if saved_workspace["name"] in var:
             niri_action(
                 "move-workspace-to-index",
                 "--reference",
-                workspace["name"],
-                workspace["idx"],
+                saved_workspace["name"],
+                saved_workspace["idx"],
             )
         else:
             niri_action(
                 "set-workspace-name",
                 "--workspace",
-                workspace["idx"],
-                workspace["name"],
+                saved_workspace["idx"],
+                saved_workspace["name"],
             )
 
         niri_action(
             "move-workspace-to-monitor",
             "--reference",
-            workspace["idx"],
-            workspace["output"],
+            saved_workspace["idx"],
+            saved_workspace["output"],
         )
 
 

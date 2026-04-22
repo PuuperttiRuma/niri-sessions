@@ -1,45 +1,49 @@
 # Phase 2: State Management
 
 ## Goal
+
 Parse the Niri IPC logs, and using the parsed data recreate a window state.
 
 ### Description
-To achieve that, we need to be able to save the windows-state JSON to 
+
+To achieve that, we need to be able to save the windows-state JSON to
 .local/share/niri-sessions and also load the data from it. WIth the data
 we need to be able to parse the JSON data and move windows using the info
 saved in the data object.
 
 **What do I need to know to move the window to the right place?**
 I need the ID of the window, but the ID's will probably be whatever, as
-they are created dynamically by Niri when spawning a new window. 
+they are created dynamically by Niri when spawning a new window.
 
 So, I need to be able to identify which windows are the same in the saved
 state and the new state after reboot.
-For that, I have *title*, *app_id* and maybe *pid*, but pid is probably also
-dependant on boot-session. But *title* and *app_id* should suffice.
+For that, I have _title_, _app_id_ and maybe _pid_, but pid is probably also
+dependant on boot-session. But _title_ and _app_id_ should suffice.
 
 Also, I need the id of the workspace. The workspaces are created dynamically,
 so the moving has to be done sequentially. And to restore the session properly
-I also need to save the workspace names. The workspaces json has the *name* of
-the workspace and also *id* and *idx*. According to Niri IPC docs the *id* is
-steady and the *idx* is the index on the monitor, so this is the one I want to
+I also need to save the workspace names. The workspaces json has the _name_ of
+the workspace and also _id_ and _idx_. According to Niri IPC docs the _id_ is
+steady and the _idx_ is the index on the monitor, so this is the one I want to
 save, as it is the one listening to `niri msg action focus-workspace` and which
 tells the actual ordering.
 
 #### Useful Niri IPC commands
+
 - `move-column-to-index --idx idx`
 - `focus-column --idx idx`
 - `focus-window --id id`
 - `focus-window-in-column --idx idx`
 - `move-window-to-monitor --id --output` Id of the window to move!
-- `set-window-width --id change` ja -height- 
+- `set-window-width --id change` ja -height-
 - `move-window-to-workspace --window-id id --focus false <reference>`. Ok, it IS
-possible to move a window without focus! The reference is the idx or name of the
-workspace.
+  possible to move a window without focus! The reference is the idx or name of the
+  workspace.
 
 #### Figuring out the move part
-To restore a session, I first need a saved state (done) and I need the current 
-state. 
+
+To restore a session, I first need a saved state (done) and I need the current
+state.
 
 Then, we go through the current state dictionary one by one, check if the
 thing is in its correct place. With workspaces, we recreate (at least now), with
@@ -48,20 +52,23 @@ windows we move.
 First we need to fix the workspaces to their correct places.
 This pretty easy: Workspaces have ID, IDX, name and output(monitor), which will
 tell where they should be. Of these the **IDX** and **Name** are what will be
-saved (and active_window maybe?). 
+saved (and active_window maybe?).
 
 How do I know if the window is in correct place?
 
 ## Doing
 
+- [ ] Create a function to recreate Workspace State
+
 ## To Do (Phase backlog)
+
 - [ ] Create a CLI arg for save and restore
 - [ ] Create a class/API for Niri commands
 - [ ] Refactor the state manipulation logic to separate file
 - [ ] Create scripts for moving the window to the correct places
 
 ## Done
-- [x] Create a function to recreate Workspace State
+
 - [x] Load the JSON to a lib
 - [x] Save the windows.state.json and workspaces.state.json to .local/state
 - [x] Change the window move to use --focus false and --id
@@ -69,6 +76,4 @@ How do I know if the window is in correct place?
 - [x] Experiment with JSON
 - [x] Parse focus-window
 
-
 ## Braindump
-

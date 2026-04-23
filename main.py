@@ -1,10 +1,10 @@
+import argparse
 from niri_ipc import (
     NiriTarget,
     get_niri_state,
     load_state_from_file,
     move_workspace_to_index,
     move_workspace_to_monitor,
-    save_state_to_file,
     set_workspace_name,
 )
 
@@ -35,12 +35,37 @@ def recreate_named_workspaces():
         move_workspace_to_monitor(output, idx)
 
 
+def save_action(args):
+    print("Saving desktop state")
+    # save_state_to_file(NiriTarget.WORKSPACES)
+    # save_state_to_file(NiriTarget.WINDOWS)
+
+
+def load_action(args):
+    print("Loading previous desktop state")
+    # load_state_from_file(NiriTarget.WINDOWS)
+
+
 def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="command")
+
+    save_parser = subparsers.add_parser("save", help="Save current desktop state.")
+    save_parser.set_defaults(func=save_action)
+
+    load_parser = subparsers.add_parser("load", help="Load desktop state.")
+    load_parser.set_defaults(func=load_action)
+
+    args = parser.parse_args()
+
+    if hasattr(args, "func"):
+        args.func(args)
+    else:
+        print("No argument given")
+        parser.print_help()
+
     # move_window("37", "3")
-    save_state_to_file(NiriTarget.WORKSPACES)
-    save_state_to_file(NiriTarget.WINDOWS)
     # recreate_named_workspaces()
-    # load("windows")
 
 
 if __name__ == "__main__":

@@ -6,11 +6,25 @@ class StateManager:
         self.workspaces = []
 
     def parse_workspaces(self, workspaces_json: dict):
-        for data in workspaces_json:
+        for item in workspaces_json:
             new_workspace = Workspace(
-                data["id"], data["idx"], data["name"], data["output"]
+                item["id"], item["idx"], item["name"], item["output"]
             )
             self.workspaces.append(new_workspace)
+
+    def parse_windows(self, windows_json: dict):
+        for item in windows_json:
+            new_window = Window(
+                item["id"], item["title"], item["app_id"], item["workspace_id"]
+            )
+            for workspace in self.workspaces:
+                if workspace.id == new_window.workspace_id:
+                    workspace.windows.append(new_window)
+                    continue
+
+    def parse_saved_jsons(self, workspaces_json: dict, windows_json: dict):
+        self.parse_workspaces(workspaces_json)
+        self.parse_windows(windows_json)
 
 
 @dataclass

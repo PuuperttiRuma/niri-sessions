@@ -19,7 +19,7 @@ def load_action(args):
     windows_data = load_state_from_file(NiriTarget.WINDOWS)
 
     manager = StateManager()
-    manager.parse_workspaces(workspace_data)
+    manager.parse_saved_jsons(workspace_data, windows_data)
     for workspace in manager.workspaces:
         print(workspace)
 

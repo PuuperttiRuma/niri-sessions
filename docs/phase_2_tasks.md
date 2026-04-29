@@ -58,16 +58,15 @@ How do I know if the window is in correct place?
 
 ## Doing
 
-- [ ] Create Window and Workspace classes to hold the state of the windows
+- [ ] Recreate Workspace State
 
 ## To Do (Phase backlog)
 
-- [ ] Refactor the state manipulation logic to separate file
-- [ ] Create scripts for moving the window to the correct places
-- [-] Create a function to recreate Workspace State
-
 ## Done
 
+- [x] Create scripts for moving the window to the correct places
+- [x] Create Window and Workspace classes to hold the state of the windows
+- [x] Refactor the state manipulation logic to separate file
 - [x] Create a CLI arg for save and restore
 - [x] Create a class/API for Niri commands
 - [x] Load the JSON to a lib

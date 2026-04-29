@@ -1,3 +1,6 @@
+from dataclasses import dataclass, field
+
+
 class StateManager:
     def __init__(self) -> None:
         self.workspaces = []
@@ -10,21 +13,21 @@ class StateManager:
             self.workspaces.append(new_workspace)
 
 
+@dataclass
 class Workspace:
-    def __init__(self, id, index, name, output) -> None:
-        self.windows = []
-        self.id = id
-        self.index = index
-        self.name = name
-        self.output = output
+    id: int
+    index: int
+    name: str
+    output: str
+    windows: list = field(default_factory=list)
 
 
+@dataclass
 class Window:
-    def __init__(self, id, title, app_id, workspace_id) -> None:
-        self.id = id
-        self.title = title
-        self.app_id = app_id
-        self.workspace_id = workspace_id
+    id: int
+    title: str
+    app_id: str
+    workspace_id: int
 
 
 # def recreate_named_workspaces():

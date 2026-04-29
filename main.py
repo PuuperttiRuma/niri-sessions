@@ -20,7 +20,8 @@ def load_action(args):
 
     manager = StateManager()
     manager.parse_workspaces(workspace_data)
-    print(manager.workspaces)
+    for workspace in manager.workspaces:
+        print(workspace)
 
 
 def main():

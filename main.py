@@ -1,7 +1,6 @@
 import argparse
 from niri_ipc import (
     NiriTarget,
-    load_state_from_file,
     save_state_to_file,
 )
 from state_manager import StateManager
@@ -15,12 +14,11 @@ def save_action(args):
 
 def load_action(args):
     print("Loading previous desktop state")
-    workspace_data = load_state_from_file(NiriTarget.WORKSPACES)
-    windows_data = load_state_from_file(NiriTarget.WINDOWS)
 
     manager = StateManager()
-    manager.parse_saved_jsons(workspace_data, windows_data)
-    for workspace in manager.workspaces:
+    manager.restore_state()
+    # For debugging
+    for workspace in manager.saved_workspaces:
         print(workspace)
 
 

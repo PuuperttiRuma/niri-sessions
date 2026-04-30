@@ -118,6 +118,21 @@ class StateManager:
         #   ne mitä ei löydy, all is fine, kirjataan ylös ja printataan lopussa lista niistä jotka ei löytäneet paikalleen
         # Tarviiko currenttia ollenkaan?
 
+    def recreate_state(self):
+        pass
+        # But how? Mulla on vanha ja uusi. Me halutaan muokata uutta niin, että se on tismalleen samanlainen kuin vanha.
+        # Eli aina kun tehdään muutoksia IPC:llä, tehdään sama muutos myös currenttiin, mutta vanhaan ei kosketa koskaan.
+        # Se pysyy immutablena. Pitäiskö luoda current kokoajan uusiksi? Sillon näkee oikean tilanteen... ehkä ei tarvii?
+        # Mutta mitenkäs tää nyt sitten tapahtuu?
+        # Ruvetaan käymään savedia läpi, yksi workspace kerrallaan, indexistä 1 lähtien.
+        # Etsitään currentista löytyykö sieltä sen nimistä workspacea?
+        #   Jos löytyy, siirretään indeksiin yks.
+        #   Jos ei löydy, luodaan uusi nimetty ws indexiin yksi
+        # Käydään savedin workspacen windowit läpi
+        #   siirretään kaikki sinne kuuluvat windowit currentista paikalleen
+        #   ne mitä ei löydy, all is fine, kirjataan ylös ja printataan lopussa lista niistä jotka ei löytäneet paikalleen
+        # Tarviiko currenttia ollenkaan?
+
 
 @dataclass
 class Workspace:

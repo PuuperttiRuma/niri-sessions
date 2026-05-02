@@ -41,14 +41,19 @@ def niri_action(action, *args):
     return subprocess.run(command)
 
 
-def move_window_to_workspace(window_id, workspace_id):
+def move_window_to_workspace(window_id, workspace_ref):
+    """Move a window to a workspace
+
+    window_id: Id of the window to move.
+    reference: Index or name of the workspace to move the window to.
+    """
     niri_action(
         "move-window-to-workspace",
         "--window-id",
         window_id,
         "--focus",
         "false",
-        workspace_id,
+        workspace_ref,
     )
 
 

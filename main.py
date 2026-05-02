@@ -17,9 +17,10 @@ def load_action(args):
 
     manager = StateManager()
     manager.restore_state()
+
     # For debugging
-    for workspace in manager.saved_workspaces:
-        print(workspace)
+    # for workspace in manager.saved_workspaces:
+    #     print(workspace)
 
 
 def main():

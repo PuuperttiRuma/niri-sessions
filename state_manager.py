@@ -1,6 +1,13 @@
 from dataclasses import dataclass, field
 
-from niri_ipc import NiriTarget, get_niri_state, load_state_from_file
+from niri_ipc import (
+    NiriTarget,
+    get_niri_state,
+    load_state_from_file,
+    move_window_to_workspace,
+    move_workspace_to_index,
+    set_workspace_name,
+)
 
 
 class StateManager:
@@ -17,15 +24,14 @@ class StateManager:
             workspaces.append(new_workspace)
         return workspaces
 
-    def parse_windows(self, windows_json: dict, workspaces: list):
+    def parse_windows(self, windows_json: dict):
+        windows = []
         for item in windows_json:
             new_window = Window(
                 item["id"], item["title"], item["app_id"], item["workspace_id"]
             )
-            for workspace in workspaces:
-                if workspace.id == new_window.workspace_id:
-                    workspace.windows.append(new_window)
-                    continue
+            windows.append(new_window)
+        return windows
 
     def restore_state(self):
         # Create an object depicting the saved desktop state
@@ -33,16 +39,84 @@ class StateManager:
         saved_windows_state = load_state_from_file(NiriTarget.WINDOWS)
 
         self.saved_workspaces = self.parse_workspaces(saved_workspaces_state)
-        self.parse_windows(saved_windows_state, self.saved_workspaces)
+        saved_windows = self.parse_windows(saved_windows_state)
+        for window in saved_windows:
+            for workspace in self.saved_workspaces:
+                if workspace.id == window.workspace_id:
+                    workspace.windows.append(window)
+                    continue
 
         # Create an object depicting the current desktop state
         current_workspaces_state = get_niri_state(target=NiriTarget.WORKSPACES)
         current_windows_state = get_niri_state(target=NiriTarget.WINDOWS)
 
         self.current_workspaces = self.parse_workspaces(current_workspaces_state)
-        self.parse_windows(current_windows_state, self.current_workspaces)
+        current_windows = self.parse_windows(current_windows_state)
+        # for window in saved_windows:
+        #     for workspace in self.saved_workspaces:
+        #         if workspace.id == window.workspace_id:
+        #             workspace.windows.append(window)
+        #             continue
 
         # Recreate the old state by modifying the desktop
+        self.saved_workspaces.sort(key=(lambda workspace: workspace.index))
+        self.current_workspaces.sort(key=(lambda workspace: workspace.index))
+
+        max_index = self.current_workspaces[-1].index
+
+        print("Recreating Workspace layouts")
+        for saved_workspace in self.saved_workspaces:
+            print(f"Recreating workspace in index {saved_workspace.index}.")
+            # If the workspace has a name:
+            if saved_workspace.name is not None:
+                # Check if there is already a workspace with same name
+                found = False
+                for current_workspace in self.current_workspaces:
+                    if current_workspace.name == saved_workspace.name:
+                        print(
+                            f"Found workspace with same name {saved_workspace.name}, moving it to index {saved_workspace.index}."
+                        )
+                        move_workspace_to_index(
+                            current_workspace.name, saved_workspace.index
+                        )
+                        found = True
+                        break
+                # If not, give the workspace in the current index a name:
+                if not found:
+                    print(f"Setting workspace name as {saved_workspace.name}")
+                    set_workspace_name(saved_workspace.name, saved_workspace.index)
+
+            # Go through all the windows in the workspace
+            # Check if there is a window with the same name in any of the current workspaces
+            # If there is, put it in the workspace we are going through and jump to next saved window
+            print(f"Moving windows to workspace in index {saved_workspace.index}.")
+            for saved_window in saved_workspace.windows:
+                found = False
+                for current_window in current_windows:
+                    if (
+                        current_window.app_id == saved_window.app_id
+                        and current_window.title == saved_window.title
+                    ):
+                        print(
+                            f"Found '{saved_window.title}', moving to workspace at index {saved_workspace.index}"
+                        )
+                        move_window_to_workspace(
+                            current_window.id, saved_workspace.index
+                        )
+                        found = True
+                        break
+                if not found:
+                    print(f"Window '{saved_window.title}' not found.")
+
+        # Mutta mitenkäs tää nyt sitten tapahtuu?
+        # Ruvetaan käymään savedia läpi, yksi workspace kerrallaan, indexistä 1 lähtien.
+        # Etsitään currentista löytyykö sieltä sen nimistä workspacea?
+        #   Jos löytyy, siirretään indeksiin yks.
+        #   Jos ei löydy, luodaan uusi nimetty ws indexiin yksi
+        # Käydään savedin workspacen windowit läpi
+        #   siirretään kaikki sinne kuuluvat windowit currentista paikalleen
+        #   ne mitä ei löydy, all is fine, kirjataan ylös ja printataan lopussa lista niistä jotka ei löytäneet paikalleen
+        # Tarviiko currenttia ollenkaan?
 
 
 @dataclass

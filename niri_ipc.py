@@ -1,12 +1,17 @@
 import subprocess
 import json
 from enum import Enum
+from pathlib import Path
 
 
 class NiriTarget(str, Enum):
     WINDOWS = ("windows",)
     WORKSPACES = ("workspaces",)
     OUTPUTS = "outputs"
+
+
+SESSION_DIR = Path.home() / ".local/state/niri-sessions"
+SESSION_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_niri_state(target: NiriTarget) -> dict:
@@ -18,17 +23,14 @@ def get_niri_state(target: NiriTarget) -> dict:
 
 
 def save_state_to_file(target: NiriTarget) -> None:
-    # local_folder = "/home/puupertti/.local/state/niri-sessions"
-    local_folder = "."
     data = get_niri_state(target)
-    with open(f"{local_folder}/{target.value}.state.json", "w") as f:
+    with open(SESSION_DIR / f"{target.value}.state.json", "w") as f:
         json.dump(data, f)
         print(f"Saved {target.value} data successfully to {f.name}")
 
 
 def load_state_from_file(target: NiriTarget) -> dict:
-    local_folder = "."
-    with open(f"{local_folder}/{target.value}.state.json", "r") as f:
+    with open(SESSION_DIR / f"{target.value}.state.json", "r") as f:
         data = json.load(f)
     return data
 

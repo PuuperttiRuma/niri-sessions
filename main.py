@@ -1,3 +1,4 @@
+import subprocess
 import argparse
 from niri_ipc import (
     NiriTarget,
@@ -10,6 +11,9 @@ def save_action(args):
     print("Saving desktop state")
     save_state_to_file(NiriTarget.WORKSPACES)
     save_state_to_file(NiriTarget.WINDOWS)
+    subprocess.run(
+        ["notify-send", "--app-name=Niri-sessions", "Window placement saved."]
+    )
 
 
 def load_action(args):
@@ -18,6 +22,9 @@ def load_action(args):
     manager = StateManager()
     manager.restore_state()
 
+    subprocess.run(
+        ["notify-send", "--app-name=Niri-sessions", "Window placement restored."]
+    )
     # For debugging
     # for workspace in manager.saved_workspaces:
     #     print(workspace)
